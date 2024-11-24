@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 struct Punto {
@@ -12,7 +13,7 @@ int orientacion(Punto p, Punto q, Punto r) {
     return (val > 0) ? 1 : 2; // en sentido horario o antihorario
 }
 
-// Funcion para verificar si el punto q está en el segmento pr.
+// Funcion para verificar si el punto q estA en el segmento pr.
 bool enSegmento(Punto p, Punto q, Punto r) {
     if (q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) &&
         q.y <= max(p.y, r.y) && q.y >= min(p.y, r.y))
@@ -65,6 +66,26 @@ int verificarLineasPerpendiculares(Punto p1, Punto q1, Punto p2, Punto q2) {
     }
 }
 
+// Función para calcular el Angulo en el punto de cruce de dos líneas
+double calcularAngulo(Punto p1, Punto q1, Punto p2, Punto q2, bool enGrados = false) {
+    double dx1 = q1.x - p1.x;
+    double dy1 = q1.y - p1.y;
+    double dx2 = q2.x - p2.x;
+    double dy2 = q2.y - p2.y;
+
+    double dotProduct = dx1 * dx2 + dy1 * dy2;
+    double magnitud1 = sqrt(dx1 * dx1 + dy1 * dy1);
+    double magnitud2 = sqrt(dx2 * dx2 + dy2 * dy2);
+
+    double angulo = acos(dotProduct / (magnitud1 * magnitud2));
+
+    if (enGrados) {
+        angulo = angulo * (180.0 / M_PI);
+    }
+
+    return angulo;
+}
+
 int main() {
     Punto puntos[4];
     for (int i = 0; i < 4; ++i) {
@@ -77,6 +98,12 @@ int main() {
 
     int resultadoPerpendicular = verificarLineasPerpendiculares(puntos[0], puntos[1], puntos[2], puntos[3]);
     cout << "Resultado de perpendicularidad: " << resultadoPerpendicular << endl;
+
+    double angulo = calcularAngulo(puntos[0], puntos[1], puntos[2], puntos[3]);
+    cout << "Angulo en radianes: " << angulo << endl;
+
+    double anguloGrados = calcularAngulo(puntos[0], puntos[1], puntos[2], puntos[3], true);
+    cout << "Angulo en grados: " << anguloGrados << endl;
 
     return 0;
 }
